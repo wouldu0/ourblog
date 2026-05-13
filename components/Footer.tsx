@@ -17,10 +17,10 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-wrap items-center gap-8 text-sm font-semibold text-gray-700">
-          <Link href="#" className="hover:text-[#3B702B] transition-colors">Archives</Link>
-          <Link href="#" className="hover:text-[#3B702B] transition-colors">Guestbook</Link>
-          <Link href="#" className="hover:text-[#3B702B] transition-colors">Privacy</Link>
-          <Link href="#" className="hover:text-[#3B702B] transition-colors">Support</Link>
+          <Link href="#" className="hover:text-[#3B702B] transition-colors">아카이브</Link>
+          <Link href="#" className="hover:text-[#3B702B] transition-colors">방명록</Link>
+          <Link href="#" className="hover:text-[#3B702B] transition-colors">개인정보처리방침</Link>
+          <Link href="#" className="hover:text-[#3B702B] transition-colors">고객지원</Link>
         </div>
 
         <div className="text-sm text-gray-500 font-medium text-center md:text-right">
