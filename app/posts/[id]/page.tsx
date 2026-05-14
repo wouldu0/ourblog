@@ -1,17 +1,16 @@
-import { createBrowserClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/server'
 import Navbar from '@/components/Navbar'
 import Footer from '@/components/Footer'
 import { Heart, Edit2 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import DeletePostButton from '@/components/DeletePostButton'
 
 export default async function PostDetailPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params
 
-  const supabase = createBrowserClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
 
   const { data: post } = await supabase
     .from('posts')
@@ -45,12 +44,17 @@ export default async function PostDetailPage(props: { params: Promise<{ id: stri
             <button className="w-14 h-14 bg-white rounded-full border border-[#EBE8DF] flex items-center justify-center text-[#7BA05B] hover:bg-[#F4F7F1] hover:text-[#3B702B] hover:scale-105 transition-all shadow-md">
               <Heart className="w-6 h-6" />
             </button>
-            <Link
-              href={`/edit/${params.id}`}
-              className="w-14 h-14 bg-white rounded-full border border-[#EBE8DF] flex items-center justify-center text-[#5C5A52] hover:bg-[#F7F5EE] hover:text-[#1F1E1A] hover:scale-105 transition-all shadow-md"
-            >
-              <Edit2 className="w-6 h-6" />
-            </Link>
+            {user && (
+              <>
+                <Link
+                  href={`/edit/${params.id}`}
+                  className="w-14 h-14 bg-white rounded-full border border-[#EBE8DF] flex items-center justify-center text-[#5C5A52] hover:bg-[#F7F5EE] hover:text-[#1F1E1A] hover:scale-105 transition-all shadow-md"
+                >
+                  <Edit2 className="w-6 h-6" />
+                </Link>
+                <DeletePostButton postId={params.id} />
+              </>
+            )}
           </div>
 
           {/* Header */}

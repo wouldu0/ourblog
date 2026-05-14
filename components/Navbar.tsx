@@ -1,9 +1,14 @@
 import Link from 'next/link'
-import { Search } from 'lucide-react'
+import { Search, PenLine } from 'lucide-react'
+import { createClient } from '@/utils/supabase/server'
+import { logout } from '@/app/login/actions'
 
-export default function Navbar() {
+export default async function Navbar() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
   return (
-    <nav className="flex items-center justify-between py-6 px-10 max-w-7xl mx-auto w-full">
+    <nav className="flex items-center justify-between py-6 px-10 max-w-7xl mx-auto w-full relative z-50">
       <div className="flex-1">
         <Link href="/" className="text-2xl font-extrabold text-[#3B702B] tracking-tight">
           해탈한 코드의 숲
@@ -24,12 +29,31 @@ export default function Navbar() {
       </div>
 
       <div className="flex-1 flex items-center justify-end gap-6">
-        <Link href="/login" className="text-xl font-semibold text-gray-800 hover:text-gray-600 transition-colors">
-          Login
-        </Link>
-        <Link href="/login" className="text-xl font-medium px-5 py-2 bg-[#447631] text-white rounded-full hover:bg-[#345c25] transition-colors shadow-sm">
-          Sign-up
-        </Link>
+        {user ? (
+          <>
+            <Link 
+              href="/write" 
+              className="flex items-center gap-2 text-xl font-medium px-5 py-2 bg-[#447631] text-white rounded-full hover:bg-[#345c25] transition-colors shadow-sm"
+            >
+              <PenLine size={18} />
+              Write
+            </Link>
+            <form action={logout}>
+              <button className="text-xl font-semibold text-gray-800 hover:text-gray-600 transition-colors">
+                Logout
+              </button>
+            </form>
+          </>
+        ) : (
+          <>
+            <Link href="/login" className="text-xl font-semibold text-gray-800 hover:text-gray-600 transition-colors">
+              Login
+            </Link>
+            <Link href="/login?mode=signup" className="text-xl font-medium px-5 py-2 bg-[#447631] text-white rounded-full hover:bg-[#345c25] transition-colors shadow-sm">
+              Sign-up
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   )
